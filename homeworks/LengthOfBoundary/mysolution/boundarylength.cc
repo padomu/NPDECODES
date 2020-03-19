@@ -38,7 +38,18 @@ double volumeOfDomain(const std::shared_ptr<lf::mesh::Mesh> mesh_p) {
 double lengthOfBoundary(const std::shared_ptr<lf::mesh::Mesh> mesh_p) {
   double length = 0.0;
   //====================
-  // Your code goes here
+
+  lf::mesh::Mesh *mesh = mesh_p.get();
+
+  lf::mesh::utils::CodimMeshDataSet<bool> bd_flags
+          = lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1);
+
+  // Loop through all edges
+  for ( const lf::mesh::Entity *edge : mesh_p->Entities(1) ) {
+    if ( bd_flags(*edge) )
+      length += lf::geometry::Volume( *edge->Geometry() );
+  }
+
   //====================
 
   return length;
