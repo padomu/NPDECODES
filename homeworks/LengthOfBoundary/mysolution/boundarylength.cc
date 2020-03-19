@@ -20,7 +20,14 @@ namespace LengthOfBoundary {
 double volumeOfDomain(const std::shared_ptr<lf::mesh::Mesh> mesh_p) {
   double volume = 0.0;
   //====================
-  // Your code goes here
+
+  lf::mesh::Mesh *mesh = mesh_p.get();
+
+  // Loop through cells
+  for ( const lf::mesh::Entity *cell : mesh->Entities(0) ) {
+    volume += lf::geometry::Volume( *cell->Geometry() );
+  }
+
   //====================
 
   return volume;
