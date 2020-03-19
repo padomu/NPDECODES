@@ -61,7 +61,17 @@ std::pair<double, double> measureDomain(std::string filename) {
   double volume, length;
 
   //====================
-  // Your code goes here
+
+  // 1. Read mesh
+  auto mesh_factory = std::make_unique<lf::mesh::hybrid2d::MeshFactory>(2);
+  lf::io::GmshReader reader(std::move(mesh_factory), filename);
+  std::shared_ptr<lf::mesh::Mesh> mesh_p = reader.mesh();
+
+  // 2. Calculate surface
+  volume = volumeOfDomain(mesh_p);
+  // 3. Calculate bundary length
+  length = lengthOfBoundary(mesh_p);
+
   //====================
 
   return {volume, length};
