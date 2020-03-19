@@ -64,7 +64,39 @@ computeEdgeVertexIncidenceMatrix(const lf::mesh::Mesh &mesh) {
   Eigen::SparseMatrix<int, Eigen::RowMajor> G;
 
   //====================
-  // Your code goes here
+
+
+  // Get number of edges: codim = 1
+  // Get number of nodes: codim = 0
+  const lf::mesh::Mesh::size_type numEdges = mesh.NumEntities(1),
+                                  numNodes = mesh.NumEntities(2);
+
+  // We know, G has exactly 2 non-zero entries per row.
+  G = Eigen::SparseMatrix<int, Eigen::RowMajor> (numEdges, numNodes);
+  G.reserve(Eigen::VectorXi::Constant(numEdges, 2)); //size=numEdges, value=2
+  
+  // 1. Iterate over alledges
+  // 2. Check index of nodes which are endpoints of the edges
+  // ! We cannot iterate ver vertices. LehrFem++ does not allow to visit !
+  // ! edges adjacent to a vertex.                                       !
+
+  for ( const lf::mesh::Entity *edge : mesh.Entities(1) ) {
+    // Get index of this edge
+    lf::mesh::Mesh::size_type edgeIdx = mesh.Index(*edge);
+
+    // Get nodes and their indices.
+    // ! Now codim(nodes)=1 - because it's a relative codim !
+    // ! Seen from the edge, a node has codim 1 !
+
+    auto nodes = edge->SubEntities(1); // ! Relativ Codim !
+    lf::mesh::Mesh::size_type firstNodeIdx = mesh.Index(*nodes[0]);
+    lf::mesh::Mesh::size_type lastNodeIdx = mesh.Index(*nodes[1]);
+
+    // Add matrix entries to G
+    G.coeffRef(edgeIdx, firstNodeIdx) = 1.0;
+    G.coeffRef(edgeIdx, lastNodeIdx) = -1.0;
+  }
+
   //====================
 
   return G;
@@ -83,7 +115,38 @@ computeCellEdgeIncidenceMatrix(const lf::mesh::Mesh &mesh) {
   Eigen::SparseMatrix<int, Eigen::RowMajor> D;
 
   //====================
-  // Your code goes here
+
+  // Get number of cells and edges
+  const lf::mesh::Mesh::size_type numCells = mesh.NumEntities(0),
+                                  numEdges = mesh.NumEntities(1);
+
+  // Sparse init. of D. D has at most 4 nnz-entries per row.
+  D = Eigen::SparseMatrix<int, Eigen::RowMajor> (numCells, numEdges);
+  D.reserve( Eigen::VectorXi::Constant(numCells, 4) );
+
+  // Loop over all cells.
+  for ( const lf::mesh::Entity *cell : mesh.Entities(0) ) {
+    // Get cell index
+    lf::mesh::Mesh::size_type cellIdx = mesh.Index(*cell);
+
+    // Get edges of current cell
+    auto edges = cell->SubEntities(1);
+
+    // Check orientation of all cells
+    auto edgeOrientations = cell->RelativeOrientations();
+
+    // Iterate over both and add to D
+    auto edgeIt = edges.begin();
+    auto orntIt = edgeOrientations.begin();
+
+    // Fill D by comparing the orientation of the edges of the current cell
+    for(; edgeIt != edges.end() && orntIt != edgeOrientations.end();
+        ++edgeIt, ++orntIt) {
+      lf::mesh::Mesh::size_type edgeIdx = mesh.Index(**edgeIt);
+      D.coeffRef(cellIdx, edgeIdx) += lf::mesh::to_sign(*orntIt);
+    }
+  }
+
   //====================
 
   return D;
@@ -101,7 +164,11 @@ bool testZeroIncidenceMatrixProduct(const lf::mesh::Mesh &mesh) {
   bool isZero = false;
 
   //====================
-  // Your code goes here
+  Eigen::SparseMatrix<int> G = computeEdgeVertexIncidenceMatrix(mesh);
+  Eigen::SparseMatrix<int> D = computeCellEdgeIncidenceMatrix(mesh);
+
+  isZero = ( (D*G).norm() == 0);
+
   //====================
   return isZero;
 }
