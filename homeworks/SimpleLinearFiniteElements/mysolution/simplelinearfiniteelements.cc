@@ -55,7 +55,12 @@ Eigen::Matrix3d
 ElementMatrix_Mass_LFE(const Eigen::Matrix<double, 2, 3> &triangle) {
   Eigen::Matrix3d element_matrix;
   //====================
-  // Your code goes here
+  
+  element_matrix << 2.0, 1.0, 1.0,
+                    1.0, 2.0, 1.0,
+                    1.0, 1.0, 2.0;
+  element_matrix *= getArea(triangle)/12.0;
+
   //====================
   return element_matrix;
 }
@@ -74,7 +79,20 @@ double L2Error(const TriaMesh2D &mesh, const Eigen::VectorXd &uFEM,
                const std::function<double(const Eigen::Vector2d &)> exact) {
   double l2error_squared = 0.0;
   //====================
-  // Your code goes here
+  
+  Eigen::VectorXd res_u;
+  Eigen::VectorXd res_uh;
+
+  for(size_t i=0; i< uFEM.size(); ++i) {
+    res_u = exact(mesh(i));
+    res_uh = uFEM(i);
+  }
+
+  Eigen::VectorXd res = res_u - res_uh;
+
+  l2error_squared = res.norm();
+
+
   //====================
 
   return std::sqrt(l2error_squared);

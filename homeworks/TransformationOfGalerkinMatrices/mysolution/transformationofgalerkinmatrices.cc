@@ -7,7 +7,6 @@
  */
 
 #include "transformationofgalerkinmatrices.h"
-
 #include <cassert>
 
 namespace TransformationOfGalerkinMatrices {
@@ -37,7 +36,47 @@ transformCOOmatrix(const std::vector<Eigen::Triplet<double>> &A) {
   int N = n_cols;     // Size of (square) matrix
   int M = n_cols / 2; // Half the size
   //====================
-  // Your code goes here
+  Eigen::SparseMatrix<double> AA(n_rows,n_cols);
+  AA.setFromTriplets(A.begin(), A.end());
+  Eigen::MatrixXd K = Eigen::MatrixXd(AA);
+  Eigen::Triplet<double> el; //(i,j,value)
+  double val = 0;
+  for(size_t i=0; i<N; ++i) {
+    for(size_t j=0; j<N; ++j) {
+      // 1 <= i,j <= M
+      if (i<M && j<M) {
+        val = K(2*i,2*j)   + K(2*i,2*j-1)
+            + K(2*i-1,2*j) + K(2*i-1,2*j-1);
+        el = Eigen::Triplet<double>(i,j, val);
+        A_t.push_back(el);
+      }
+
+      // M+1 <= i,j <= N
+      if (i >= M && j < N) {
+        val = K(2*(i-M)-1, 2*(j-M)-1) - K(2*(i-M), 2*(j-M)-1)
+            - K(2*(i-M)-1, 2*(j-M))   + K(2*(i-M), 2*(j-M));
+        el = Eigen::Triplet<double>(i,j, val);
+        A_t.push_back(el);
+      }
+
+      // M+1 <= i <= N, 1 <= j <= M
+      if (i >= M && j < M) {
+        val = K(2*(i-N)-1, 2*j-1) - K(2*(i-M), 2*j-1)
+            + K(2*(i-M)-1, 2*j)   - K(2*(i-M), 2*j);
+        el = Eigen::Triplet<double>(i,j, val);
+        A_t.push_back(el);
+      }
+      // 1<=i,j<=M
+      if (i < M && j >= M ) {
+        val = K(2*i-1, 2*(j-M)-1) + K(2*i, 2*(j-M)-1)
+            - K(2*i-1,2*(j-M)) - K(2*i, 2*(j-M));
+        el = Eigen::Triplet<double>(i,j, val);
+        A_t.push_back(el);
+      }
+
+    }
+  }
+
   //====================
   return A_t;
 }
