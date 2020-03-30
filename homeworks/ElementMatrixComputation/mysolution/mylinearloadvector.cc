@@ -29,9 +29,14 @@ Eigen::Vector4d computeLoadVector(
   Eigen::Vector4d elem_vec =
       Eigen::Vector4d::Zero();
 
-  //====================
-  // Your code goes here
-  //====================
+//====================
+
+// I looked at the solution. Wanted to use
+// the provided quad rules but that's not
+// possible since we only get the vertices and f.
+  
+
+//====================
 
   return elem_vec;
 }

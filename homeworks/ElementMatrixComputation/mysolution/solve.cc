@@ -27,8 +27,14 @@ Eigen::VectorXd solvePoissonBVP() {
   // Define the solution vector
   Eigen::VectorXd solution = Eigen::VectorXd::Zero(1);
 
-  //====================
-  // Your code goes here
+  // Elemental Matrix Builder
+  lf::uscalfe::LinearFELaplaceElementMatrix elmat_builder;
+
+  // Elemental Vector Builder
+  lf::uscalfe::LinearFELocalLoadVector<double, decltype(mf_f)> elvec_builder(mf_f);
+
+  solution = solve(elmat_builder, elvec_builder);
+
   //====================
 
   return solution;

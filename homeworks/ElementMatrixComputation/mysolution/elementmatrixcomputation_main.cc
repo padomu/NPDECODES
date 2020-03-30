@@ -10,6 +10,7 @@
 
 int main(int /*argc*/, const char** /*argv*/) {
   ElementMatrixComputation::solvePoissonBVP();
+  std::cout << "\n !!!!! \n";
   ElementMatrixComputation::solveNeumannEq();
   return 0;
 }
