@@ -79,9 +79,42 @@ std::size_t countBoundaryDofs(const lf::assemble::DofHandler &dofhandler) {
 double integrateLinearFEFunction(
     const lf::assemble::DofHandler& dofhandler,
     const Eigen::VectorXd& mu) {
-  double I = 0;
+  double I = 0.0;
   //====================
-  // Your code goes here
+
+  // Loop over all cells
+  // - Get global node indices
+  // - I += u1+u2+u3
+  // - I *= K/3.0
+
+  // Get mesh
+  std::shared_ptr<const lf::mesh::Mesh> mesh = dofhandler.Mesh();
+
+  // Loop over all cells
+  for( const auto *cell : mesh->Entities(0) ) {
+    // Check if the FE space is really S_1^0
+    if( dofhandler.NumLocalDofs(*cell) != 3 ) {
+      throw "Not a S_1^0 space!";
+    }
+
+    // Get all dofs for nodes of cell
+    // Note: We are in S_0^1 so the "interior" dofs
+    // happen to match the nodes.
+    auto int_dofs = dofhandler.GlobalDofIndices(*cell);
+
+    // Loop over all those (three) interior dofs
+    for( auto dof_idx_p = int_dofs.begin();
+         dof_idx_p < int_dofs.end();
+         ++dof_idx_p ) {
+
+      const double K = lf::geometry::Volume(*(cell->Geometry())) / 3.0;
+
+      I += K*mu(*dof_idx_p);
+    }
+    // 
+  }
+
+
   //====================
   return I;
 }
@@ -93,7 +126,29 @@ double integrateQuadraticFEFunction(const lf::assemble::DofHandler &dofhandler,
                                     const Eigen::VectorXd &mu) {
   double I = 0;
   //====================
-  // Your code goes here
+
+  // Get the mesh
+  std::shared_ptr<const lf::mesh::Mesh> mesh = dofhandler.Mesh(); 
+
+  // Loop over all cells
+  for( const auto *cell : mesh->Entities(0) ) {
+    // Check if the FE space really is S_2^0
+    if( dofhandler.NumLocalDofs(*cell) != 6 ) {
+      throw "Not a S_2^0 FE space!";
+    }
+
+    // Get area of cell
+    const double K = lf::geometry::Volume(*(cell->Geometry())) / 3.0;
+
+    // Get internal dofs
+    auto int_dofs = dofhandler.GlobalDofIndices(*cell);
+
+    // See solution and calculate it with 2.7.5.5!
+    // => int_k bk^j dx = 0 for j=1,2,3 => SKIP
+
+    I += K * ( mu(int_dofs[3]) + mu(int_dofs[4]) + mu(int_dofs[5]) );
+  }
+
   //====================
   return I;
 }
@@ -115,19 +170,8 @@ convertDOFsLinearQuadratic(const lf::assemble::DofHandler &dofh_Linear_FE,
   zeta.setZero();
 
   for (const auto *cell : mesh->Entities(0)) {
-    // check if the spaces are actually linear and quadratic
     //====================
-    // Your code goes here
-    //====================
-    // get the global dof indices of the linear and quadratic FE spaces, note
-    // that the vectors obey the LehrFEM++ numbering, which we will make use of
-    // lin\_dofs will have size 3 for the 3 dofs on the nodes and
-    // quad\_dofs will have size 6, the first 3 entries being the nodes and
-    // the last 3 the edges
-    //====================
-    // Your code goes here
-    // assign the coefficients of mu to the correct entries of zeta, use
-    // the previous subproblem 2-9.a
+
     //====================
   }
   return zeta;
