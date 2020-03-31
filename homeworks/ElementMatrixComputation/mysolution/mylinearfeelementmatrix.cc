@@ -18,8 +18,13 @@
 namespace ElementMatrixComputation {
 
 /* SAM_LISTING_BEGIN_1 */
+<<<<<<< HEAD
 Eigen::Matrix<double, 4, 4> MyLinearFEElementMatrix::Eval(
   const lf::mesh::Entity &cell) {
+=======
+Eigen::Matrix<double, 4, 4>
+MyLinearFEElementMatrix::Eval(const lf::mesh::Entity &cell) {
+>>>>>>> 3a2043cea445a57ecb3d77f1b8ed46cd255a6ade
   // Topological type of the cell
   const lf::base::RefEl ref_el{cell.RefEl()};
 
@@ -78,4 +83,4 @@ Eigen::Matrix<double, 4, 4> MyLinearFEElementMatrix::Eval(
   return elem_mat;
 }
 /* SAM_LISTING_END_1 */
-}  // namespace ElementMatrixComputation
+} // namespace ElementMatrixComputation

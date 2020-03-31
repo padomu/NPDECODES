@@ -18,28 +18,28 @@ replace the old links by new ones pointing to the correct /NPDECODES/homeworks f
 | 2-6 | `IncidenceMatrices` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 2-7 | `LengthOfBoundary` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 2-8 | `ElementMatrixComputation` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
-| 2-9 | `HandlingDOFs` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| 2-10 | `ProjectionOntoGradients` | :heavy_check_mark: | :heavy_check_mark: | :white_check_mark: | Erick |
-| 2-12 | `TestQuadratureRules` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Oliver |
-| 2-13 | `ParametricElementMatrices` | :heavy_check_mark: | :heavy_check_mark: | :white_check_mark: | Oliver |
-| 2-14 | `NonConformingCrouzeixRaviartFiniteElements` | :heavy_check_mark: | :heavy_check_mark: |:white_check_mark: | Amélie  |
-| 2-15 | `RegularizedNeumann` |  |  |  | Philippe ( / Tobias) |
-| 3-1 | `AvgValBoundary` | :white_check_mark: |  |  | Tobias |
-| 3-2 | `DebuggingFEM` |  |  |  |  |
-| 3-3 | `PointEvaluationRhs` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| 3-4 | `UnstableBVP` | :heavy_check_mark: |  |  |  |
-| 3-5 | `ErrorEstimatesForTraces` | :heavy_check_mark: |  |  |  |
-| 3-7 | `MaximumPrinciple` | :heavy_check_mark: |  |  |  |
-| 3-8 | `OutputImpedanceBVP` | :heavy_check_mark: |  |  |  |
-| 6-1 | `RadauThreeTimestepping` | :heavy_check_mark: |  |  |  |
-| 6-2 | `SDIRKMethodOfLines` | :heavy_check_mark: |  |  |  |
-| 6-4 | `1DWaveAbsorbingBC` | :heavy_check_mark: |  |  |  |
-| 6-5 | `SymplecticTimesteppingWaves` | :heavy_check_mark: |  |  |  |
-| 6-6 | `BoundaryWave` | :heavy_check_mark: |  |  |  |
-| 8-1 | `BurgersEquation` | :heavy_check_mark: |  |  |  |
-| 8-2 | `EngquistOsherNumericalFlux` | :heavy_check_mark: |  |  |  |
-| 8-3 | `FiniteVolumeSineConsLaw` | :heavy_check_mark: |  |  |  |
-| 8-6 | `CLEmpiricFLux` | :heavy_check_mark: |  |  |  |
+| 2-9 | `LFPPDofHandling` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 2-10 | `ProjectionOntoGradients` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 2-12 | `TestQuadratureRules` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 2-13 | `ParametricElementMatrices` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 2-14 | `NonConformingCrouzeixRaviartFiniteElements` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 2-15 | `RegularizedNeumannProblem` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 3-1 | `AvgValBoundary` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 3-2 | `DebuggingFEM` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 3-3 | `PointEvaluationRhs` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 3-4 | `UnstableBVP` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 3-5 | `ErrorEstimatesForTraces` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 3-7 | `MaximumPrinciple` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 3-8 | `OutputImpedanceBVP` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  |  |
+| 6-1 | `RadauThreeTimestepping` | :heavy_check_mark: | :heavy_check_mark: |  |  |
+| 6-2 | `SDIRKMethodOfLines` | :heavy_check_mark: | :heavy_check_mark: |  |  |
+| 6-4 | `1DWaveAbsorbingBC` | :heavy_check_mark: |:heavy_check_mark: |  |  |
+| 6-5 | `SymplecticTimesteppingWaves` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 6-6 | `BoundaryWave` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 8-1 | `BurgersEquation` | :heavy_check_mark: | :heavy_check_mark: |  |   |
+| 8-2 | `EngquistOsherNumericalFlux` | :heavy_check_mark: | :heavy_check_mark: |  |  |
+| 8-3 | `FiniteVolumeSineConsLaw` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 8-6 | `CLEmpiricFLux` | :heavy_check_mark: | :heavy_check_mark: |  |  |
 | ? | `WaveABC2d` | :heavy_check_mark: |  |  |  |
 | ? | `ZienkiewiczZhuEstimator` | :heavy_check_mark: |  |  |  |
 | ? | `ElectrostaticForce` | :heavy_check_mark: |  |  |  |
@@ -52,9 +52,9 @@ replace the old links by new ones pointing to the correct /NPDECODES/homeworks f
 
 * Below, the directory `.` refers to the top level directory of the repository.
 * Developers only work in `./developers/<ProblemName>/`. From this, a corresponding directory `./homeworks/<ProblemName>/` for the students can be created automatically using `./scripts/deploy_npde.py`.
-* Not only the solutions, but also the corresponding templates need to compile and run without crash. So be careful when setting the solution/template tags in `developers/mastersolution/`.
+* Not only the solutions, but also the corresponding templates need to compile and, if possible, run without crash. So be careful when setting the solution/template tags in `developers/mastersolution/`.
 * The bullets below are only a selection. If you spot additional issues, e.g. ugly or too complicated code, fix it.
-* Names of .cc and .h files: For example the files in the folder `./developers/MyHomeworkProblem/mastersolution/` should be called `myhomeworkproblem_main.cc`, `myhomeworkproblem_foo.cc`, `myhomeworkproblem_foo.h`, where foo is a placeholder for any name (summarized: lowercase, split words by _).
+* Names of .cc and .h files: For example the files in the folder `./developers/MyHomeworkProblem/mastersolution/` should be called `myhomeworkproblem_main.cc`, `myhomeworkproblem.cc`, `myhomeworkproblem.h`, `myclass.h` (lowercase, no underlines except for the main file).
 * Only in Lehrfem exercises: Use `nostd::span` (C++20) instead of `ForwardIteraters` for iterating over objects contiguous in memory (used e.g. in `Mesh::Entities()`, `SubEntities()`, `DofHandler`).
 
 ## Polishing
@@ -108,12 +108,14 @@ Problems PDF: https://www.sam.math.ethz.ch/~grsam/NUMPDE/HOMEWORK/NPDEProblems.p
 
 # TO DO LIST
 
-## Missing unitests 
+## Missing unitests
+
+RegularizedNeumannProblem: getGalerkinLSE(...) has no unit tests
 
 ### Not in NPDEFL_Problems
-- BoundaryWave
-- ZienkiewiczZhuEstimator
-- WaveABC2D
+- BoundaryWave (done)
+- ZienkiewiczZhuEstimator (done)
+- WaveABC2D (done)
 
 ### Chapter 6
 - RadauThreeTimestepping
