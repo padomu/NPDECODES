@@ -26,7 +26,22 @@ std::array<std::size_t, 3>
 countEntityDofs(const lf::assemble::DofHandler &dofhandler) {
   std::array<std::size_t, 3> entityDofs;
   //====================
-  // Your code goes here
+
+  // Get the mesh
+  std::shared_ptr<const lf::mesh::Mesh> mesh = dofhandler.Mesh(); 
+
+  // Loop through codimensions
+  for( std::size_t codim = 0; codim <=2; ++codim) {
+    entityDofs[codim] = 0;
+    // Loop through all entities of given codim
+    for( const auto *el : mesh->Entities(codim) ) {
+      if( el->RefEl() == lf::base::RefEl::kQuad() ) {
+        throw "only triangular meshes are allowed!";
+      }
+      entityDofs[codim] += dofhandler.NumInteriorDofs(*el);
+    }
+  }
+
   //====================
   return entityDofs;
 }
@@ -41,7 +56,19 @@ std::size_t countBoundaryDofs(const lf::assemble::DofHandler &dofhandler) {
       lf::mesh::utils::flagEntitiesOnBoundary(mesh));
   std::size_t no_dofs_on_bd = 0;
   //====================
-  // Your code goes here
+
+  // Edges on boundary
+  for( const auto *edge : mesh->Entities(1) ) {
+    if( bd_flags(*edge) )
+      no_dofs_on_bd += dofhandler.NumInteriorDofs(*edge);
+  }
+
+  // Nodes on boundary
+  for( const auto *node : mesh->Entities(2) ) {
+    if( bd_flags(*node) )
+      no_dofs_on_bd += dofhandler.NumInteriorDofs(*node);
+  }
+
   //====================
   return no_dofs_on_bd;
 }
