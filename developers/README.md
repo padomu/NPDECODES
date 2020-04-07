@@ -31,22 +31,24 @@ replace the old links by new ones pointing to the correct /NPDECODES/homeworks f
 | 3-5 | `ErrorEstimatesForTraces` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | 3-7 | `MaximumPrinciple` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | 3-8 | `OutputImpedanceBVP` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  |  |
-| 6-1 | `RadauThreeTimestepping` | :heavy_check_mark: | :heavy_check_mark: |  |  |
+| 3-9 | `ZienkiewiczZhuEstimator` | :heavy_check_mark: | :white_check_mark: |  | Philippe  |
+| 3-10 | 'ParametricFiniteElements' | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 6-1 | `RadauThreeTimestepping` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  |  |
 | 6-2 | `SDIRKMethodOfLines` | :heavy_check_mark: | :heavy_check_mark: |  |  |
 | 6-4 | `1DWaveAbsorbingBC` | :heavy_check_mark: |:heavy_check_mark: |  |  |
 | 6-5 | `SymplecticTimesteppingWaves` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | 6-6 | `BoundaryWave` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 7-1 | `ExpFittedUpwind` | | | | |
 | 8-1 | `BurgersEquation` | :heavy_check_mark: | :heavy_check_mark: |  |   |
 | 8-2 | `EngquistOsherNumericalFlux` | :heavy_check_mark: | :heavy_check_mark: |  |  |
 | 8-3 | `FiniteVolumeSineConsLaw` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 8-6 | `CLEmpiricFLux` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| ? | `WaveABC2d` | :heavy_check_mark: |  |  |  |
-| ? | `ZienkiewiczZhuEstimator` | :heavy_check_mark: |  |  |  |
+| ? | `WaveABC2d` | :heavy_check_mark: | :white_check_mark:  |  | Amélie |
 | ? | `ElectrostaticForce` | :heavy_check_mark: |  |  |  |
 | ? | `ExtendedMUSCL` |  |  |  |  |
 | ? | `FiniteVolumeRobin` |  |  |  |  |
 | ? | `IPDGFEM` | |  |  |  |
-| ? | `LinFeReactDiff` | |  |  |  |
+| ? | `LinFeReactDiff` | :white_check_mark: |  |  | Philipp Egg |
 
 ## General Remarks
 
@@ -97,7 +99,6 @@ to indicate what belongs to mastersolution and/or template. Based on these tags,
 
 Problems PDF: https://www.sam.math.ethz.ch/~grsam/NUMPDE/HOMEWORK/NPDEProblems.pdf
 
-* Problem 5.6: Parametric Finite Elements
 * Problem 5.7: Stable Evaluation at a Point
 * Problem 5.8: Trace Error Estimates **(done already?)**
 * Problem 6.6: Non-linear Schrödinger Equation with Cubic Non-Linearity **(Oliver)**
@@ -110,7 +111,7 @@ Problems PDF: https://www.sam.math.ethz.ch/~grsam/NUMPDE/HOMEWORK/NPDEProblems.p
 
 ## Missing unitests
 
-RegularizedNeumannProblem: getGalerkinLSE(...) has no unit tests
+RegularizedNeumannProblem: getGalerkinLSE(...) has no unit tests (done)
 
 ### Not in NPDEFL_Problems
 - BoundaryWave (done)
@@ -119,6 +120,5 @@ RegularizedNeumannProblem: getGalerkinLSE(...) has no unit tests
 
 ### Chapter 6
 - RadauThreeTimestepping
-- SDIRKMethodOfLines
 - SymplecticTimesteppingWaves
 
