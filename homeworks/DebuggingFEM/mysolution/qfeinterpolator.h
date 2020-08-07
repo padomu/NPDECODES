@@ -47,7 +47,23 @@ Eigen::VectorXd interpolateOntoQuadFE(const lf::assemble::DofHandler &dofh,
   Eigen::VectorXd result = Eigen::VectorXd::Zero(N_dofs);
 
   //====================
-  // Your code goes here
+  for (const lf::mesh::Entity *cell : mesh->Entities(0)) {
+    // get local to global map for the cell
+    auto glob_ind = dofh.GlobalDofIndices(*cell);
+    // This is a rather clumsy implementation. A much better way to accomplish
+    // this is to pass a full matrix of reference coorindates to the Global()
+    // methof of the current cell entity. This will immediately give the global
+    // coorindates of all local interpolation nodes and we can dispense with the
+    // auxiliary function. Afterwards we can loop over the columns of the matrix.
+    // std::cout << "\n\n indices";
+    for (int i = 0; i < 6; i++) {
+      // update the result vector
+      auto coords = globalCoordinate(i, *cell);
+      // std::cout << "glob_ind[i] = " << glob_ind[i] << " , result(glob_ind[i])=" << result(glob_ind[i]) << "\n";
+      result(glob_ind[i]) = f(coords);
+    }
+    // std::cout << "\n\n";
+  }
   //====================
   return result;
 }

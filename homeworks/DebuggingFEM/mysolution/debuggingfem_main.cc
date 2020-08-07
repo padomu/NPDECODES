@@ -56,7 +56,7 @@ int main() {
   Eigen::MatrixXd H1SMerr(L, num_emp);
   Eigen::VectorXi N(L);
 
-  for (int level = 0; level < L; ++level) {
+    for (int level = 0; level < L; ++level) {
     // set up fespace and dof handler for the mesh at the current level
     auto mesh_p = multi_mesh.getMesh(level);
     lf::uscalfe::FeSpaceLagrangeO2<double> fespace(mesh_p);
@@ -72,10 +72,12 @@ int main() {
         return std::exp(x(1) * x(1) + x(0) * x(0));
       };
       double energy = 0.0;
-      //====================
-      // Your code goes here
-      // Use DebuggingFEM::QFEProviderTester to compute the energy
-      //====================
+      // Matrix in triplet format holding Galerkin for LocalLaplaceQFEX matrix,
+      // zero initially.
+      DebuggingFEM::QFEProviderTester qfe_provider_tester(
+          dofh, *element_matrix_provider[i]);
+      // compute the energy and error
+      energy = qfe_provider_tester.energyOfInterpolant(f);
       H1SMerr(level, i) = std::abs(23.76088 - energy);
     }
   }

@@ -37,7 +37,32 @@ Eigen::Matrix3d ElementMatrixProvider::Eval(const lf::mesh::Entity &entity) {
   Eigen::Matrix3d loc_mat;
 
   //====================
-  // Your code goes here
+
+  // Get area of entity
+  const double K = lf::geometry::Volume(*geo_ptr);
+
+  // Get coordiantes of corners of entity/triangle
+  const Eigen::MatrixXd corners = lf::geometry::Corners(*geo_ptr);
+
+  // We know A_K=a(b_i,b_j) for i,j=1,2,3
+  // We plug our a from 2.10.a int that and get
+  // A_K=2*int_K grad(b_h^i)grad(b_h^j)dx fpr i,j=1,2,3
+  // = 2int_k grad(lambda_i)grad(lambda_j)dx
+  // We can use 2.4.5.10 to get the element matrix for this.
+  // See code: 2.4.5.11 and 2.4.5.13
+
+  // First Matrix (with a's in it)
+  Eigen::Matrix3d gradients;
+  gradients.col(0) = Eigen::Vector3d::Ones();
+  gradients.rightCols(2) = corners.transpose();
+
+  // Second Matrix (with the betas in it)
+  // Solve it:
+  const Eigen::MatrixXd betas = gradients.inverse().bottomRows(2);
+
+  // Now we use code 2.4.5.13
+  loc_mat = K * betas.transpose() * betas;
+
   //====================
   return loc_mat;
 }

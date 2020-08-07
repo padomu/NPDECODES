@@ -7,6 +7,7 @@
  */
 
 #include "simplelinearfiniteelements.h"
+#include <iostream>
 
 namespace SimpleLinearFiniteElements {
 
@@ -55,11 +56,12 @@ Eigen::Matrix3d
 ElementMatrix_Mass_LFE(const Eigen::Matrix<double, 2, 3> &triangle) {
   Eigen::Matrix3d element_matrix;
   //====================
-  
+  double K = getArea(triangle);
   element_matrix << 2.0, 1.0, 1.0,
                     1.0, 2.0, 1.0,
                     1.0, 1.0, 2.0;
-  element_matrix *= getArea(triangle)/12.0;
+
+  element_matrix *= K/12.0;
 
   //====================
   return element_matrix;
@@ -80,18 +82,34 @@ double L2Error(const TriaMesh2D &mesh, const Eigen::VectorXd &uFEM,
   double l2error_squared = 0.0;
   //====================
   
-  Eigen::VectorXd res_u;
-  Eigen::VectorXd res_uh;
+  int N_dim = mesh.elements.rows();
 
-  for(size_t i=0; i< uFEM.size(); ++i) {
-    res_u = exact(mesh(i));
-    res_uh = uFEM(i);
+  for(int i = 0; i<N_dim; ++i) {
+    // Get triangle
+    Eigen::Vector3i triangle_node_indexes = mesh.elements.row(i);
+
+    // Get vertices
+    Eigen::Vector2d v1 = mesh.vertices.row(triangle_node_indexes(0));
+    Eigen::Vector2d v2 = mesh.vertices.row(triangle_node_indexes(1));
+    Eigen::Vector2d v3 = mesh.vertices.row(triangle_node_indexes(2));
+
+    // Save triangle
+    Eigen::Matrix<double, 2, 3> triangle;
+    //triangle.col(0) = v1;
+    //triangle.col(1) = v2;
+    //riangle.col(2) = v3;
+    triangle << v1, v2, v3;
+    // get area
+    double K = getArea(triangle);
+
+    double tmp = 0.0;
+    tmp = ( uFEM(triangle_node_indexes(0)) - exact(v1) ) * ( uFEM(triangle_node_indexes(0)) - exact(v1) );
+    tmp = ( uFEM(triangle_node_indexes(1)) - exact(v2) ) * ( uFEM(triangle_node_indexes(1)) - exact(v2) );
+    tmp = ( uFEM(triangle_node_indexes(2)) - exact(v3) ) * ( uFEM(triangle_node_indexes(2)) - exact(v3) );
+    tmp *= K/3.0;
+
+    l2error_squared += tmp;
   }
-
-  Eigen::VectorXd res = res_u - res_uh;
-
-  l2error_squared = res.norm();
-
 
   //====================
 
@@ -115,7 +133,52 @@ H1Serror(const TriaMesh2D &mesh, const Eigen::VectorXd &uFEM,
          const std::function<Eigen::Vector2d(const Eigen::Vector2d &)> exact) {
   double H1Serror_squared = 0.0;
   //====================
-  // Your code goes here
+  
+  int N_dim = mesh.elements.rows();
+
+  for(int i = 0; i<N_dim; ++i) {
+    // Get triangle
+    Eigen::Vector3i triangle_node_indexes = mesh.elements.row(i);
+
+    // Get vertices
+    Eigen::Vector2d v1 = mesh.vertices.row(triangle_node_indexes(0));
+    Eigen::Vector2d v2 = mesh.vertices.row(triangle_node_indexes(1));
+    Eigen::Vector2d v3 = mesh.vertices.row(triangle_node_indexes(2));
+
+    // Save triangle
+    Eigen::Matrix<double, 2, 3> triangle;
+    //triangle.col(0) = v1;
+    //triangle.col(1) = v2;
+    //riangle.col(2) = v3;
+    triangle << v1, v2, v3;
+    // get area
+    double K = getArea(triangle);
+
+    Eigen::Matrix<double, 2, 3> gradTriangle = gradbarycoordinates(triangle);
+
+    // Get gradients of barycentric coord. functions (the lambdas) for the given triangle
+    // We need those to compute grad_uh
+    Eigen::Matrix<double, 2, 3> gradBary = gradbarycoordinates(triangle);
+
+    // Get grad(u_h(a^i))
+    // Note that grad(u_h(a^1))=grad(u_h(a^2))=grad(u_h(a^3)) since we are on a plane.
+    // A plane has only one gradient.. since... you know ... it's a plane
+    Eigen::Vector2d grad_uh = uFEM(triangle_node_indexes(0))*gradBary.col(0)
+                            + uFEM(triangle_node_indexes(1))*gradBary.col(1)
+                            + uFEM(triangle_node_indexes(2))*gradBary.col(2);
+
+    double tmp = 0.0;
+
+    tmp = (grad_uh - exact(v1)).squaredNorm();
+    tmp += (grad_uh - exact(v2)).squaredNorm();
+    tmp += (grad_uh - exact(v2)).squaredNorm();
+
+    //tmp = ( grad_uh - exact(triangle_node_indexes(0)) ).squaredNorm();
+
+    tmp *= K/3.0;
+
+    H1Serror_squared += tmp;
+  }
   //====================
 
   return std::sqrt(H1Serror_squared);
@@ -222,10 +285,31 @@ Solve(const SimpleLinearFiniteElements::TriaMesh2D &mesh) {
 
   //====================
   // Your code goes here
-  // Assigning some dummy values
-  U = Eigen::VectorXd::Zero(mesh.vertices.rows());
-  l2error = 1.0;
-  h1error = 1.0;
+
+  auto gradUExact = [pi] (const Eigen::Vector2d& x) {
+    Eigen::Vector2d gradient;
+    gradient << -2.0*pi*std::sin(2*pi*x(0))*std::cos(2.0*pi*x(1)),
+                -2.0*pi*std::cos(2*pi*x(0))*std::sin(2.0*pi*x(1));
+
+    return gradient;
+  };
+
+  Eigen::SparseMatrix<double> A = SimpleLinearFiniteElements::GalerkinAssembly(mesh, SimpleLinearFiniteElements::ElementMatrix_LaplMass_LFE);
+  Eigen::VectorXd rhs_vector = SimpleLinearFiniteElements::assemLoad_LFE(mesh, f);
+
+  Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>> solver;
+  //solver.compute(A);
+  solver.analyzePattern(A);
+  solver.factorize(A);
+
+  U = solver.solve(rhs_vector);
+
+
+
+
+  l2error = SimpleLinearFiniteElements::L2Error(mesh, U, uExact);
+  h1error = SimpleLinearFiniteElements::H1Serror(mesh, U, gradUExact);
+
   //====================
   return std::make_tuple(U, l2error, h1error);
 }

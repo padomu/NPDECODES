@@ -30,7 +30,7 @@ namespace ElementMatrixComputation {
  * @brief      Given element providers, it creates FE space, assembles Galerkin
  * matrix and vector, and solves the LSE.
  *
- * @param[in]  mesh_p         A mesh pointer
+ * @param[in]  mesh_p          A mesh pointer
  * @param[in]  elmat_provider  An element matrix provider object
  * @param[in]  elvec_provider  An element vector provider object
  *
@@ -42,7 +42,7 @@ Eigen::VectorXd solve(ELMAT_BUILDER &elmat_provider,
                       ELVEC_BUILDER &elvec_provider) {
   // Use one of LehrFEM++'s default meshes. Try different meshes by changing the
   // function index parameter. See the documentation of that function for
-  // details ablut the available meshes
+  // details about the available meshes
   std::shared_ptr<const lf::mesh::Mesh> mesh_p =
       lf::mesh::test_utils::GenerateHybrid2DTestMesh(8, 1.0 / 3.0);
   // We use a linear Lagrangian FE space
@@ -74,11 +74,11 @@ Eigen::VectorXd solve(ELMAT_BUILDER &elmat_provider,
 
   //====================
 
-  // We want to solve a LSE: A_crs*sol_vec=phi
-  Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
-  solver.analyzePattern(A_crs);
-  solver.factorize(A_crs);
-
+  Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
+  solver.compute(A_crs);
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error("Could not decompose the matrix");
+  }
   sol_vec = solver.solve(phi);
 
   //====================

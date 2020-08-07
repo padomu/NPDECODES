@@ -202,6 +202,7 @@ Eigen::VectorXd solveB(const Eigen::VectorXd& mesh, FUNCTOR1&& alpha,
   // II. Build the right hand side source vector
   Eigen::VectorXd rhs_vec = computeRHS(mesh, f);
 
+
   // III. Enforce dirichlet boundary conditions
   // Proceeding as in solveA, we begin by dropping the first and last rows
   // and columns of the galerkin matrix. The rhs_vec needs to be modified to
@@ -211,6 +212,9 @@ Eigen::VectorXd solveB(const Eigen::VectorXd& mesh, FUNCTOR1&& alpha,
   Eigen::VectorXd rhs_vec_reduced = rhs_vec.segment(1, N - 1) -
                                     A.block(1, 0, N - 1, 1) * u0 -
                                     A.block(1, N, N - 1, 1) * u1;
+
+  std::cout << "\nA_Reduced\n" << (Eigen::MatrixXd)A_reduced << "\n\n";
+  std::cout << "\nrhs_vec_reduced\n" << rhs_vec_reduced  << "\n\n";
 
   // IV. Solve the LSE A*u = rhs_vec using an Eigen solver
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>> solver;
@@ -224,6 +228,7 @@ Eigen::VectorXd solveB(const Eigen::VectorXd& mesh, FUNCTOR1&& alpha,
   // boundary values
   u(0) = u0;  // left boundary node
   u(N) = u1;  // right boundary node
+  
   return u;
 }  // solveB
 /* SAM_LISTING_END_B */

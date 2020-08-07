@@ -71,6 +71,7 @@ double integrateLinearFEFunction(
     const Eigen::VectorXd& mu) {
   double I = 0;
   std::shared_ptr<const lf::mesh::Mesh> mesh = dofhandler.Mesh();
+  std::cout << "indices\n";
   for (const auto *cell : mesh->Entities(0)) {
     // check if we the FE space is really $\Cs_1^0$
     if (dofhandler.NumLocalDofs(*cell) != 3) {
@@ -78,6 +79,7 @@ double integrateLinearFEFunction(
     }
     // iterate over dofs
     auto int_dofs = dofhandler.GlobalDofIndices(*cell);
+
     for (auto dof_idx_p = int_dofs.begin(); dof_idx_p < int_dofs.end();
          ++dof_idx_p) {
       // local integral of the basis function associated with this dof:
@@ -85,6 +87,7 @@ double integrateLinearFEFunction(
       // a triangle K is: 1/3*vol(K)
       const double I_bary = 1.0 / 3.0 * lf::geometry::Volume(*(cell->Geometry()));
       // multiply by the value at the dof to get local contribution
+    std::cout << *dof_idx_p << "\n";
       I += I_bary * mu(*dof_idx_p);
     }
   }

@@ -10,7 +10,7 @@
 #define MESH "Square4"
 
 int main() {
-  std::string meshfile = CURRENT_SOURCE_DIR "/../meshes/" MESH ".txt";
+  std::string meshfile = "triangle.txt";
 
   SimpleLinearFiniteElements::TriaMesh2D square_mesh(meshfile);
   std::cout << "Mesh loaded " << std::endl;

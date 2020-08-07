@@ -13,25 +13,37 @@ coordinates of the nodes (i.e. the distance of the node from origin 0.0).
 */
 
 #include "linearfe1d.h"
+#include <cmath>
 
 int main() {
+  // Constant and variable parameters
   // Creating a 1D mesh of the interval (0,1)
-  int N = 100;                  // nb. of cells
+  int N = 9;                  // nb. of cells
+  auto f = [](double x) { return 0.0; };
+  auto alpha = [](double x) { return 1.0; };
+  double u0 = 0.0;
+  double u1 = 0.0;
+
+
   Eigen::VectorXd mesh(N + 1);  // nb. of nodes
   // Nodes are equally spaced
   for (int i = 0; i < N + 1; i++) {
     mesh[i] = i * (1.0 / N);
   }
  
-  // Constant and variable parameters
-  auto identity = [](double x) { return x; };
-  auto const_one = [](double x) { return 1.0; };
+
 
   // Solving the BVPs
   Eigen::VectorXd uA, uB, uC;
-  uA = LinearFE1D::solveA(mesh, identity, const_one);
-  uB = LinearFE1D::solveB(mesh, identity, const_one, 0.1, 0.5);
-  uC = LinearFE1D::solveC(mesh, identity, identity);
+  //uA = LinearFE1D::solveA(mesh, identity, const_one);
+  //uB = LinearFE1D::solveB(mesh, identity, const_one, 0.1, 0.5);
+                               // alpha      f       u0    u1
+  uB = LinearFE1D::solveB(mesh, alpha, f, u0, u1);
+
+std::cout << "\n\n\nSolution u:\n" << uB << "\n\n\n\n\n";
+
+
+  //uC = LinearFE1D::solveC(mesh, identity, identity);
 
   // PRINTING RESULTS TO.csv FILE
   // Defining CSV output file format

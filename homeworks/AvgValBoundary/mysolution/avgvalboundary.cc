@@ -34,7 +34,17 @@ double compH1seminorm(const lf::assemble::DofHandler &dofh,
                       const Eigen::VectorXd &u) {
   double result = 0.0;
   //====================
-  // Your code goes here
+  
+  auto alpha = [] (Eigen::Vector2d x) { return 1.0; };
+  auto beta = [] (Eigen::Vector2d x) { return 0.0; };
+  auto gamma = [] (Eigen::Vector2d x) { return 0.0; };
+
+
+  Eigen::SparseMatrix<double> A = compGalerkinMatrix(dofh, alpha, gamma, beta);
+
+
+  result = std::sqrt( u.transpose()*A*u );
+
   //====================
   return result;
 }

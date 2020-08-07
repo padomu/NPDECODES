@@ -25,14 +25,11 @@ Eigen::VectorXd solvePoissonBVP() {
   // The basis expansion coefficient vector for the finite-element solution
   Eigen::VectorXd solution = Eigen::VectorXd::Zero(1);
 
-  // Elemental Matrix Builder
+  //====================
   lf::uscalfe::LinearFELaplaceElementMatrix elmat_builder;
-
-  // Elemental Vector Builder
   lf::uscalfe::LinearFELocalLoadVector<double, decltype(mf_f)> elvec_builder(mf_f);
 
   solution = solve(elmat_builder, elvec_builder);
-
   //====================
 
   return solution;
@@ -44,7 +41,12 @@ Eigen::VectorXd solveNeumannEq() {
   Eigen::VectorXd solution;
 
   //====================
-  // Your code goes here
+
+  // Define the element matrix and element vector builders and solve the system
+  MyLinearFEElementMatrix elmat_builder;
+  MyLinearLoadVector elvec_builder(f);
+
+  solution = solve(elmat_builder, elvec_builder);
   //====================
 
   return solution;

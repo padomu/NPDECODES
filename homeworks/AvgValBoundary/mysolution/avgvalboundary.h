@@ -90,7 +90,18 @@ double compBoundaryFunctional(const lf::assemble::DofHandler &dofh,
                               const Eigen::VectorXd &u, FUNCTION &&w) {
   double result = 0.0;
   //====================
-  // Your code goes here
+
+
+  auto alpha = [] (Eigen::Vector2d x) -> double { return 0.0; };
+  auto gamma = [] (Eigen::Vector2d x) -> double { return 0.0; };
+
+  Eigen::SparseMatrix<double> A = compGalerkinMatrix(dofh, alpha, gamma,
+                                                     std::forward<FUNCTION>(w));
+
+  Eigen::VectorXd one_const = Eigen::VectorXd::Ones(A.rows());
+
+  result = one_const.transpose()*A*u;
+
   //====================
   return result;
 }

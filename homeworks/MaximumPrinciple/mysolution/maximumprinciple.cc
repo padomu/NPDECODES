@@ -30,7 +30,21 @@ Eigen::SparseMatrix<double> assemble(int M, const Eigen::Matrix3d &B_K) {
   int M2 = M * M;
   Eigen::SparseMatrix<double> A(M2, M2);
   //====================
-  // Your code goes here
+  
+  // allocate memory
+  A.reserve(7);
+
+  // Get |K| - note that each cell has the same shape, so we can
+  // get it outside of the loop
+  double h = 1.0/(M+1);
+  double K = 0.5*h*h;
+
+  // Looper over all nodes
+  for(int i=0; i<M2; ++i) {
+
+    A.coeffRef(i,j) = v;
+  }
+
   //====================
   return A;
 }
@@ -40,7 +54,22 @@ Eigen::SparseMatrix<double> assemble(int M, const Eigen::Matrix3d &B_K) {
 Eigen::SparseMatrix<double> computeGalerkinMatrix(int M, double c) {
   Eigen::Matrix3d B_K;
   //====================
-  // Your code goes here
+  double h = 1./(M+1);
+  double K = 0.5*h*h;
+
+  Eigen::Matrix3d A_K;
+  A_K << 2.0, -1.0, -1.0,
+        -1.0,  2.0,  0.0
+        -1.0,  0.0,  2.0;
+  A_K *= 0.5;
+
+  Eigen::Matrix3d M_K;
+  M_K << 2.0, 1.0, 1.0,
+         1.0, 2.0, 1.0,
+         1.0, 1.0, 2.0;
+  M_K *= K/12.0;
+
+  B_K = (1.0 - c)*A_K + c*M_K;
   //====================
   return assemble(M, B_K);
 }

@@ -53,6 +53,11 @@ QFEProviderTester<ENTITY_MATRIX_PROVIDER>::QFEProviderTester(
   //====================
   // Your code goes here
   // Assemble the Galerkin matrix into A_
+  const lf::base::size_type N_dofs(dofh.NumDofs());
+  lf::assemble::COOMatrix<double> mat(N_dofs, N_dofs);
+  lf::assemble::AssembleMatrixLocally(0, dofh, dofh, element_matrix_provider,
+                                      mat);
+  A_ = Eigen::SparseMatrix<double>(mat.makeSparse());
   //====================
 }
 /* SAM_LISTING_END_2 */
@@ -64,7 +69,9 @@ double QFEProviderTester<ENTITY_MATRIX_PROVIDER>::energyOfInterpolant(
     FUNCTOR &&u) const {
   double energy = 0.0;
   //====================
-  // Your code goes here
+  Eigen::VectorXd eta = DebuggingFEM::interpolateOntoQuadFE(dofh_, u);
+  // Compute $\cob{\vec{\etabf}^{\top}\VA\vec{\etabf}}$
+  energy = eta.dot(A_ * eta);
   //====================
   return energy;
 }

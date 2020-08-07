@@ -29,14 +29,46 @@ computeLoadVector(const Eigen::MatrixXd &vertices,
   // Vector for returning element vector
   Eigen::Vector4d elem_vec = Eigen::Vector4d::Zero();
 
-//====================
+  //====================
 
-// I looked at the solution. Wanted to use
-// the provided quad rules but that's not
-// possible since we only get the vertices and f.
-  
+  // first two midpoints of edges of cell
+  Eigen::Vector2d m1 = 0.5*(vertices.col(0) + vertices.col(1));
+  Eigen::Vector2d m2 = 0.5*(vertices.col(1) + vertices.col(2));
 
-//====================
+  // == TRIANGLE ==
+  if (num_nodes == 3) {
+    // Third midpoint of edge
+    Eigen::Vector2d m3 = 0.5*(vertices.col(2) + vertices.col(0));
+    
+    // Area
+    double K = 0.5*( (vertices(0,1) - vertices(0,0)) * (vertices(1,2) - vertices(1,0)) -
+                     (vertices(1,1) - vertices(1,0)) * (vertices(0,2) - vertices(0,0)));
+    K /= num_nodes;
+
+    elem_vec(0) = f(m1) + f(m3);
+    elem_vec(1) = f(m1) + f(m2);
+    elem_vec(2) = f(m2) + f(m3);
+    elem_vec *= K/2.0;
+
+    // == QUADRILITERA ==
+    } else if (num_nodes == 4) {
+    // Third and forth midpoints of edge
+    Eigen::Vector2d m3 = 0.5*(vertices.col(2) + vertices.col(3));
+    Eigen::Vector2d m4 = 0.5*(vertices.col(3) + vertices.col(0));
+    
+    // Area
+    double K = ( vertices(0,1) - vertices(0,0) )*
+               ( vertices(1,3) - vertices(1,0) );
+    K /= num_nodes;
+
+    elem_vec(0) = f(m1) + f(m4);
+    elem_vec(1) = f(m1) + f(m2);
+    elem_vec(2) = f(m2) + f(m3);
+    elem_vec(3) = f(m3) + f(m4);
+    elem_vec *= K/2.0;
+    }
+
+  //====================
 
   return elem_vec;
 }

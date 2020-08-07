@@ -66,7 +66,14 @@ std::pair<Eigen::SparseMatrix<double>, Eigen::VectorXd> getGalerkinLSE_dropDof(
 
   // Now fix the solution to be 0 at the node p
   //====================
-  // Your code goes here
+  auto selector = [](lf::base::glb_idx_t idx) -> std::pair<bool, double> {
+    if (idx == 0) {
+      return {true, 0.0}; // fix first d.o.f. to zero
+    } else {
+      return {false, 42.0}; // keep all others
+    }
+  };
+  lf::assemble::FixFlaggedSolutionComponents(selector, A_aux, rhs_vec);
   //====================
   A = A_aux.makeSparse();
   return std::make_pair(A, rhs_vec);
