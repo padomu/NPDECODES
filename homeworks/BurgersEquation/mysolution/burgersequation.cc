@@ -8,9 +8,8 @@
 
 #include "burgersequation.h"
 
-#include <cmath>
-
 #include <Eigen/Core>
+#include <cmath>
 
 namespace BurgersEquation {
 /* SAM_LISTING_BEGIN_1 */

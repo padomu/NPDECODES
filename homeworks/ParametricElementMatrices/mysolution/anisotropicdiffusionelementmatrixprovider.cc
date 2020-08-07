@@ -38,6 +38,10 @@ switch (cell_geometry->RefEl()) {
       // I.ii Obtain the midpoints of the parametrized triangle
       auto midpoints_param = cell_geometry->Global(midpoints_ref);
 
+      // ===================
+      // Your code goes here
+      // ===================
+
       // II. COMPUTE LOCAL INTEGRATION DATA
       // II.i Compute the inverse of the tranposed Jacobian
       //     (J^T)^{-1} = J*(J^T*J)^{-1}
@@ -141,7 +145,7 @@ switch (cell_geometry->RefEl()) {
       break;
       /* SAM_LISTING_END_2 */
     }
-    
+
     /* ERROR CASE WHERE THE CELL IS NEITHER A TRIANGLE NOR A QUADRILATERAL */
     default:
       LF_VERIFY_MSG(false, "received neither triangle nor quadrilateral");

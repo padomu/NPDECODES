@@ -6,9 +6,9 @@
  * @copyright Developed at ETH Zurich
  */
 
-#include <gtest/gtest.h>
-
 #include <vector>
+
+#include <gtest/gtest.h>
 
 #include "../radauthreetimesteppingode.h"
 

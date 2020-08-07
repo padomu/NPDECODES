@@ -8,22 +8,21 @@
 
 #include "mylinearloadvector.h"
 
-#include <functional>
-
-#include <Eigen/Core>
-
 #include <lf/base/base.h>
 #include <lf/geometry/geometry.h>
 #include <lf/mesh/mesh.h>
+
+#include <Eigen/Core>
+#include <functional>
 
 namespace ElementMatrixComputation {
 
 namespace {
 
 /* SAM_LISTING_BEGIN_1 */
-Eigen::Vector4d
-computeLoadVector(const Eigen::MatrixXd &vertices,
-                  std::function<double(const Eigen::Vector2d &)> f) {
+Eigen::Vector4d computeLoadVector(
+    const Eigen::MatrixXd &vertices,
+    std::function<double(const Eigen::Vector2d &)> f) {
   // Number of nodes of the element: triangles = 3, rectangles = 4
   const int num_nodes = vertices.cols();
   // Vector for returning element vector
@@ -74,7 +73,7 @@ computeLoadVector(const Eigen::MatrixXd &vertices,
 }
 /* SAM_LISTING_END_1 */
 
-} // namespace
+}  // namespace
 
 Eigen::Vector4d MyLinearLoadVector::Eval(const lf::mesh::Entity &cell) {
   // Topological type of the cell
@@ -91,4 +90,4 @@ Eigen::Vector4d MyLinearLoadVector::Eval(const lf::mesh::Entity &cell) {
   return computeLoadVector(vertices, f_);
 }
 
-} // namespace ElementMatrixComputation
+}  // namespace ElementMatrixComputation

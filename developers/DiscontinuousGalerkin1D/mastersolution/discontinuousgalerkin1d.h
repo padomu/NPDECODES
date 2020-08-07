@@ -8,7 +8,6 @@
 
 #include <iostream>
 
-
 #include <cmath>
 #include <utility>
 
@@ -110,7 +109,8 @@ Eigen::VectorXd dgcl(Eigen::VectorXd mu0, FUNCTOR &&f, NUMFLUX &&F, double T,
   // single-step method
   double tau = T / m;
   for (int i = 0; i < m; ++i) {
-    // First compute the increment and then update the state vector, see \lref{eq:Chemp}
+    // First compute the increment and then update the state vector, see
+    // \lref{eq:Chemp}
     Eigen::VectorXd k = -Binv * G_bound(mu0);
     mu0 = mu0 - tau * Binv * G_bound(mu0 + 0.5 * tau * k);
   }
@@ -140,7 +140,8 @@ struct Solution {
     u_ = other.u_;
     std::cout << "Called copy contructor" << std::endl;
   }
-  Solution(Eigen::VectorXd x, Eigen::VectorXd u) : x_(std::move(x)), u_(std::move(u)) {}
+  Solution(Eigen::VectorXd x, Eigen::VectorXd u)
+      : x_(std::move(x)), u_(std::move(u)) {}
   Eigen::VectorXd x_;
   Eigen::VectorXd u_;
 };

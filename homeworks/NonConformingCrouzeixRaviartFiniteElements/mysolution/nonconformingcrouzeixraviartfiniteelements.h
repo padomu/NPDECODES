@@ -18,18 +18,19 @@ class CRReferenceFiniteElement final
   lf::base::RefEl RefEl() const override;
   unsigned int Degree() const override;
   lf::assemble::size_type NumRefShapeFunctions() const override;
-  lf::assemble::size_type NumRefShapeFunctions(lf::assemble::dim_t codim) const override;
-  lf::assemble::size_type NumRefShapeFunctions(lf::assemble::dim_t codim, lf::base::sub_idx_t subidx) const override;
+  lf::assemble::size_type NumRefShapeFunctions(
+      lf::assemble::dim_t codim) const override;
+  lf::assemble::size_type NumRefShapeFunctions(
+      lf::assemble::dim_t codim, lf::base::sub_idx_t subidx) const override;
   Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
-  EvalReferenceShapeFunctions(const Eigen::MatrixXd& refcoords) const override;
+  EvalReferenceShapeFunctions(const Eigen::MatrixXd &refcoords) const override;
   Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
   GradientsReferenceShapeFunctions(
-      const Eigen::MatrixXd& refcoords) const override;
+      const Eigen::MatrixXd &refcoords) const override;
   Eigen::MatrixXd EvaluationNodes() const override;
   lf::assemble::size_type NumEvaluationNodes() const override;
   Eigen::Matrix<double, 1, Eigen::Dynamic> NodalValuesToDofs(
-      const Eigen::Matrix<double, 1, Eigen::Dynamic>& nodvals)
-      const override;
+      const Eigen::Matrix<double, 1, Eigen::Dynamic> &nodvals) const override;
 };
 
 }  // namespace NonConformingCrouzeixRaviartFiniteElements

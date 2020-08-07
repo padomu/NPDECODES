@@ -35,28 +35,28 @@ replace the old links by new ones pointing to the correct /NPDECODES/homeworks f
 | 3-9 | `ZienkiewiczZhuEstimator` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 3-10 | `ParametricFiniteElements` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 3-11 | `StableEvaluationAtAPoint` | :heavy_check_mark: | :heavy_check_mark: |  | Need checking by Ralf |
-| 3-12 | `ElectrostaticForce` | :heavy_check_mark:  |  |  | check unitest |
+| 3-12 | `ElectrostaticForce` | :heavy_check_mark:  | :heavy_check_mark: | :white_check_mark: (Erick) | check unitest |
 | 6-1 | `RadauThreeTimestepping` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  |  |
 | 6-2 | `SDIRKMethodOfLines` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
-| 6-4 | `1DWaveAbsorbingBC` | :heavy_check_mark: |:heavy_check_mark: |  |  |
+| 6-4 | `1DWaveAbsorbingBC` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 6-5 | `SymplecticTimesteppingWaves` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | 6-6 | `BoundaryWave` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 6-7 | `WaveABC2d` | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark:  |  |
 | 6-8 | `NonLinSchroedingerEquation` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
-| 6-9 | `FisherKPP` | TO DO | |  | |
-| 7-1 | `ExpFittedUpwind` | TO DO | | | |
-| 7-2 | `UpwindQuadrature` | TO DO | | | Philippe Peter |
-| 7-3 | `TranspSemiLagr` | TO DO | | | |
+| 6-9 | `FisherKPP` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| 7-1 | `ExpFittedUpwind` | TO DO | | |Amélie |
+| 7-2 | `UpwindQuadrature` | DONE |  |  | needs LaTeX changes by Ralf |
+| 7-3 | `TranspSemiLagr` | TO DO | | | Philippe Peter |
 | 7-4 | `UpwindFiniteVolume` | TO DO | | | |
-| 8-1 | `BurgersEquation` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |   |
+| 8-1 | `BurgersEquation` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 8-2 | `EngquistOsherNumericalFlux` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
 | 8-3 | `FiniteVolumeSineConsLaw` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
-| 8-6 | `CLEmpiricFLux` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| 8-7| `ExtendedMUSCL` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| 8-8 | `AdvectionFV2D` | :heavy_check_mark: | :heavy_check_mark: |  |  |
-| ? | `FiniteVolumeRobin` | :white_check_mark: |  |  | Philipp L. |
+| 8-6 | `CLEmpiricFLux` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 8-7| `ExtendedMUSCL` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  |
+| 8-8 | `AdvectionFV2D` | TODO |  |  | Philipp Egg |
+| ? | `FiniteVolumeRobin` |  |  |  |  |
 | ? | `IPDGFEM` | |  |  |  |
-| ? | `LinFeReactDiff` | :white_check_mark: |  |  | Philipp Egg |
+| ? | `LinFeReactDiff` |  |  |  |  |
 
 Problems PDF: https://www.sam.math.ethz.ch/~grsam/NUMPDE/HOMEWORK/NPDEProblems.pdf
  * Problem 7.5: Transport Problem?
@@ -71,12 +71,23 @@ Problems PDF: https://www.sam.math.ethz.ch/~grsam/NUMPDE/HOMEWORK/NPDEProblems.p
 * Names of .cc and .h files: For example the files in the folder `./developers/MyHomeworkProblem/mastersolution/` should be called `myhomeworkproblem_main.cc`, `myhomeworkproblem.cc`, `myhomeworkproblem.h`, `myclass.h` (lowercase, no underlines except for the main file).
 * Only in Lehrfem exercises: Use `nostd::span` (C++20) instead of `ForwardIteraters` for iterating over objects contiguous in memory (used e.g. in `Mesh::Entities()`, `SubEntities()`, `DofHandler`).
 
+## Continuous Integration
+* For every commit a number of checks is run:
+  1) `clang-format-8` is used to check if the formatting of all files under the `./developers` folder conforms with the [Google C++ Style guide](https://google.github.io/styleguide/cppguide.html).
+  2) All the code under `./developer` is compiled with `g++-8` (Linux) and `clang++` (osx)
+  3) All the mastersolution tests run.
+* After you have made a commit, you can check the status of the continuous integration pipeline on [travis](https://travis-ci.com/github/erickschulz/NPDECODES)
+* If the clang format step fails, just reformat all files:
+  ```
+  cd ./developers/
+  find . -iname *.h -o -iname '*.cc' | xargs clang-format-8 -i
+  ```
+
 ## Polishing
 
 * Add comments if necessary.
 * Use `#include <cmath>` instead of `#include <math.h>`.
 * Only use the `#includes "..."` you need, e.g. for `Eigen::MatrixXd`, `#include <Eigen/Core>` is sufficient (no `#include <Eigen/Dense>` needed). Likewise for the `dependencies.cmake`. However, every file (`.h` and `.cc`) should contain all the `#includes` it needs, not relying on other headers to provide them silently.
-* Use forward declarations to avoid `#includes` whenever possible.
 * Make the code follow the Google style (see https://google.github.io/styleguide/cppguide.html). In particular, respect the include order (https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes).
 * Never store data in the remote repository that is generated by the code anyway (e.g. figures). The repo should only contain source files (and maybe some mesh files).
 * Provide unit tests for all functions that the students have to change.

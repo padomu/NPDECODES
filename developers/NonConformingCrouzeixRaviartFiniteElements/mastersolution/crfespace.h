@@ -28,17 +28,19 @@ class CRFeSpace : public lf::uscalfe::UniformScalarFESpace<double> {
   CRFeSpace &operator=(const CRFeSpace &) = delete;
   CRFeSpace &operator=(CRFeSpace &&) noexcept = default;
 
-  /** @brief main constructor that sets up the local-to-global index mapping
-   * @param mesh_p shared pointer to underlying mesh (immutable) */
+  /** Main constructor that sets up the local-to-global index mapping
+   * by calling the constructor if its base class
+   * The parameter mesh_p is a shared pointer to underlying mesh (immutable) */
   explicit CRFeSpace(std::shared_ptr<const lf::mesh::Mesh> mesh_p)
       : lf::uscalfe::UniformScalarFESpace<double>(
             std::move(mesh_p), std::make_shared<CRReferenceFiniteElement>(),
             nullptr, nullptr) {}
-   
-   // TODO: task 2-14.t)
-   #if SOLUTION
-   #else
-   #endif
+#if SOLUTION
+  // You might have wondered what to do, but there is nothing to do!
+  // The base class takes care of everything
+#else
+  // Your code here ;-).
+#endif
 
   ~CRFeSpace() override = default;
 };

@@ -8,20 +8,18 @@
 
 #include "mylinearfeelementmatrix.h"
 
-#include <Eigen/Core>
-
 #include <lf/base/base.h>
 #include <lf/geometry/geometry.h>
 #include <lf/mesh/mesh.h>
 #include <lf/uscalfe/uscalfe.h>
 
-#include <iostream>
+#include <Eigen/Core>
 
 namespace ElementMatrixComputation {
 
 /* SAM_LISTING_BEGIN_1 */
-Eigen::Matrix<double, 4, 4>
-MyLinearFEElementMatrix::Eval(const lf::mesh::Entity &cell) {
+Eigen::Matrix<double, 4, 4> MyLinearFEElementMatrix::Eval(
+    const lf::mesh::Entity &cell) {
   // Topological type of the cell
   const lf::base::RefEl ref_el{cell.RefEl()};
 
@@ -66,4 +64,4 @@ MyLinearFEElementMatrix::Eval(const lf::mesh::Entity &cell) {
   return elem_mat;
 }
 /* SAM_LISTING_END_1 */
-} // namespace ElementMatrixComputation
+}  // namespace ElementMatrixComputation

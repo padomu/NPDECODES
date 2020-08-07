@@ -24,4 +24,4 @@ double computeEnergy(std::shared_ptr<const lf::mesh::Mesh> mesh,
                      Eigen::VectorXd mu);
 }  // namespace LinFeReactDiff
 
-#endif // define __LINFEREACTDIFF_H
+#endif  // define __LINFEREACTDIFF_H
